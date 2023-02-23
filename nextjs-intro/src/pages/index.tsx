@@ -1,6 +1,8 @@
 import Seo from "@/components/Seo";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
-
+import Link from "next/link";
+import Image from "next/image";
+import { useRouter } from "next/router";
 interface IMovieProps {
   id: number;
   backdrop_path: string;
@@ -10,18 +12,27 @@ interface IMovieProps {
   title: string;
   vote_average: number;
   genre_ids: [number];
+}
 
 export default function Home({
   results,
 }: InferGetServerSidePropsType<GetServerSideProps>) {
-  console.log(results);
+  const router = useRouter();
 
+  const onClick = (id: number, title: string) => {
+    router.push(`/movies/${id}`);
+  };
   return (
     <div>
       <Seo title="Home" />
-      {results?.map((movie: any) => (
-        <div className="movie" key={movie.id}>
-          <h4>{movie.original_title}</h4>
+
+      {results?.map((movie: IMovieProps) => (
+        <div key={movie.id}>
+          <Link href={`/movies/${movie.original_title}/${movie.id}`}>
+            {/* <h4 onClick={() => onClick(movie.id, movie.title)}> */}
+            {movie.original_title}
+            {/* </h4> */}
+          </Link>
         </div>
       ))}
       <style jsx>{`
